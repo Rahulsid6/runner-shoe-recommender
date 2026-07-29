@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Runner Shoe Recommender (MVP)</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="container">
+      <h1>Runner Shoe Recommender (MVP)</h1>
+      <p class="muted">
+        Offline MVP (no external DB). Filters + scoring-based recommendations for road / trail / track.
+      </p>
+    </header>
+
+    <main class="container grid">
+      <section class="card">
+        <h2>Your running profile</h2>
+
+        <form id="prefsForm" class="form">
+          <div class="row">
+            <label>
+              <span class="labelLine">
+                <span>Surface</span>
+                <span class="help" data-tip="Where you run most. This drives grip, protection, cushioning, and shoe type. Road = pavement, Trail = off-road, Track = track workouts/racing.">i</span>
+              </span>
+              <select name="surface" required>
+                <option value="road" selected>Road</option>
+                <option value="trail">Trail</option>
+                <option value="track">Track</option>
+              </select>
+            </label>
+
+            <label>
+              <span class="labelLine">
+                <span>Budget (max)</span>
+                <span class="help" data-tip="Maximum price you want to pay. We try to keep picks under this; slightly over-budget shoes may still appear if they match strongly.">i</span>
+              </span>
+              <input name="budget" type="number" min="50" step="1" value="180" required />
+            </label>
+          </div>
+
+          <div class="row">
+            <label>
+              <span class="labelLine">
+                <span>Distance focus</span>
+                <span class="help" data-tip="What distances you care about most. Shoes differ in cushioning, efficiency, and stability over longer runs.">i</span>
+              </span>
+              <select name="distance" required>
+                <option value="5k">5K</option>
+                <option value="10k">10K</option>
+                <option value="hm" selected>Half Marathon</option>
+                <option value="fm">Marathon</option>
+                <option value="ultra">Ultra</option>
+              </select>
+            </label>
+
+            <label>
+              <span class="labelLine">
+                <span>Primary use</span>
+                <span class="help" data-tip="How you’ll use the shoe most often. Easy/daily = comfort and durability. Tempo/race = lighter and more responsive. Mixed = versatile all-rounder.">i</span>
+              </span>
+              <select name="use" required>
+                <option value="easy">Easy / Recovery</option>
+                <option value="daily" selected>Daily trainer</option>
+                <option value="tempo">Tempo / Speed</option>
+                <option value="race">Race</option>
+                <option value="mixed">Mixed</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="row">
+            <label>
+              <span class="labelLine">
+                <span>Stability need</span>
+                <span class="help" data-tip="How much support you want. Neutral = no extra guidance. Mild support = a little help. Stability = designed to reduce excess inward roll (overpronation) and feel more guided.">i</span>
+              </span>
+              <select name="stability" required>
+                <option value="neutral" selected>Neutral</option>
+                <option value="mild">Mild support</option>
+                <option value="stability">Stability</option>
+              </select>
+            </label>
+
+            <label>
+              <span class="labelLine">
+                <span>Foot width</span>
+                <span class="help" data-tip="Choose based on your usual fit. Wide can reduce hotspots/numbness; narrow can improve lockdown. If unsure, keep Regular.">i</span>
+              </span>
+              <select name="width" required>
+                <option value="regular" selected>Regular</option>
+                <option value="wide">Wide</option>
+                <option value="narrow">Narrow</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="row">
+            <label>
+              <span class="labelLine">
+                <span>Cushioning feel</span>
+                <span class="help" data-tip="Soft = plush impact feel. Balanced = middle ground. Firm = more ground feel and often more stable/snappy. Preference varies by runner.">i</span>
+              </span>
+              <select name="cushion" required>
+                <option value="soft">Soft</option>
+                <option value="balanced" selected>Balanced</option>
+                <option value="firm">Firm</option>
+              </select>
+            </label>
+
+            <label>
+              <span class="labelLine">
+                <span>Runner weight (kg)</span>
+                <span class="help" data-tip="Used as a simple heuristic. Heavier runners often prefer more cushioning/stability; lighter runners may prefer lighter/more responsive shoes.">i</span>
+              </span>
+              <input name="weightKg" type="number" min="35" max="130" step="1" value="72" required />
+            </label>
+          </div>
+
+          <fieldset class="fieldset">
+            <legend>Trail-specific (only used when surface = trail)</legend>
+            <div class="row">
+              <label>
+                <span class="labelLine">
+                  <span>Terrain</span>
+                  <span class="help" data-tip="What the trails are like. Rocky/technical favors protection and stability; muddy favors aggressive lugs; buffed favors smoother/lighter shoes.">i</span>
+                </span>
+                <select name="terrain">
+                  <option value="mixed" selected>Mixed</option>
+                  <option value="rocky">Rocky / technical</option>
+                  <option value="muddy">Muddy / soft</option>
+                  <option value="buffed">Buffed / smooth</option>
+                </select>
+              </label>
+
+              <label>
+                <span class="labelLine">
+                  <span>Priority</span>
+                  <span class="help" data-tip="What matters most on trail. Grip = traction. Protection = rock plate/underfoot defense. Weight/agility = faster, lighter feel.">i</span>
+                </span>
+                <select name="trailPriority">
+                  <option value="grip" selected>Grip</option>
+                  <option value="protection">Protection</option>
+                  <option value="weight">Weight / agility</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="actions">
+            <button type="submit" class="primary">Recommend shoes</button>
+            <button type="button" id="resetBtn">Reset</button>
+          </div>
+        </form>
+
+        <div class="hint">
+          <strong>Tip:</strong> This MVP uses a transparent scoring model. It’s easy to tune weights and add shoes.
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="resultsHeader">
+          <h2>Recommendations</h2>
+          <div id="meta" class="muted"></div>
+        </div>
+
+        <div id="results" class="results">
+          <p class="muted">Fill the form and click <em>Recommend shoes</em>.</p>
+        </div>
+      </section>
+
+      <section class="card full">
+        <h2>Catalog (sample data)</h2>
+        <p class="muted">
+          A small built-in dataset across road/trail/track. Add more shoes in <code>src/shoes.js</code>.
+        </p>
+        <div id="catalog" class="catalog"></div>
+      </section>
+    </main>
+
+    <footer class="container footer muted">
+      Built as an offline MVP. Next step: replace in-memory catalog with Postgres + ingestion pipeline + RAG explanations.
+    </footer>
+
+    <script src="./src/shoes.js"></script>
+    <script src="./src/recommender.js"></script>
+    <script src="./src/app.js"></script>
+  </body>
+</html>

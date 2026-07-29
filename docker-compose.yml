@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16
+    container_name: runner_shoe_db
+    environment:
+      POSTGRES_DB: shoe_kb
+      POSTGRES_USER: shoe
+      POSTGRES_PASSWORD: shoe_password
+    ports:
+      - "54329:5432"
+    volumes:
+      - shoe_kb_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shoe -d shoe_kb"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  shoe_kb_pgdata:

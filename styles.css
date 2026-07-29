@@ -1,0 +1,339 @@
+:root {
+  --bg: #0b1020;
+  --card: #111a33;
+  --muted: #a9b4d0;
+  --text: #eef2ff;
+  --accent: #7c5cff;
+  --accent2: #22c55e;
+  --border: rgba(255, 255, 255, 0.1);
+  --shadow: rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji",
+    "Segoe UI Emoji";
+  background: radial-gradient(1200px 800px at 10% 10%, rgba(124, 92, 255, 0.25), transparent),
+    radial-gradient(1200px 800px at 90% 30%, rgba(34, 197, 94, 0.18), transparent), var(--bg);
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.container {
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+header {
+  padding: 24px 0 10px;
+}
+
+h1 {
+  margin: 0 0 6px;
+  font-size: 28px;
+  letter-spacing: 0.2px;
+}
+
+h2 {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 8px 0 24px;
+}
+
+@media (min-width: 920px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .full {
+    grid-column: 1 / -1;
+  }
+}
+
+.card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 20px 60px var(--shadow);
+  backdrop-filter: blur(8px);
+}
+
+.form .row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+@media (min-width: 620px) {
+  .form .row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.labelLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.help {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1;
+  user-select: none;
+  cursor: help;
+}
+
+.help:hover {
+  border-color: rgba(124, 92, 255, 0.6);
+  box-shadow: 0 0 0 4px rgba(124, 92, 255, 0.14);
+}
+
+/* Custom tooltip (instead of default browser title tooltip) */
+.help {
+  position: relative;
+}
+
+.help::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%);
+  width: min(320px, 70vw);
+  padding: 10px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(15, 23, 42, 0.95);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.25;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease, transform 120ms ease;
+  z-index: 50;
+}
+
+.help::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 4px);
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(15, 23, 42, 0.95);
+  opacity: 0;
+  transition: opacity 120ms ease;
+  z-index: 51;
+}
+
+.help:hover::after,
+.help:hover::before {
+  opacity: 1;
+}
+
+.help:hover::after {
+  transform: translateX(-50%) translateY(-2px);
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--text);
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  border-color: rgba(124, 92, 255, 0.55);
+  box-shadow: 0 0 0 4px rgba(124, 92, 255, 0.16);
+}
+
+.fieldset {
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 14px 0 10px;
+}
+
+.fieldset legend {
+  padding: 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+button {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+button.primary {
+  background: linear-gradient(90deg, rgba(124, 92, 255, 0.8), rgba(124, 92, 255, 0.5));
+  border-color: rgba(124, 92, 255, 0.65);
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+.hint {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(124, 92, 255, 0.25);
+  background: rgba(124, 92, 255, 0.08);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.resultsHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.results {
+  display: grid;
+  gap: 10px;
+}
+
+.rec {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.recTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 8px 0 0;
+}
+
+.badge {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.badge.good {
+  border-color: rgba(34, 197, 94, 0.5);
+  color: rgba(210, 255, 226, 0.95);
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.badge.warn {
+  border-color: rgba(245, 158, 11, 0.5);
+  color: rgba(255, 236, 208, 0.95);
+  background: rgba(245, 158, 11, 0.12);
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 12px;
+  margin: 10px 0 0;
+}
+
+.kv div {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.kv strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.catalog {
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+th,
+td {
+  padding: 10px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: left;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+th {
+  color: var(--text);
+  font-weight: 650;
+  background: rgba(255, 255, 255, 0.04);
+  position: sticky;
+  top: 0;
+}
+
+.footer {
+  padding: 12px 0 28px;
+  font-size: 12px;
+}

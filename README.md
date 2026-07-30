@@ -5,14 +5,17 @@ A simple **offline** shoe recommendation engine for runners (**road / trail / tr
 - Transparent filter + scoring recommender (`src/recommender.js`)
 - UI wizard + top-5 recommendations with reasons/cautions (`src/app.js`)
 
-This project was intentionally built with **zero external dependencies** so it works even if npm registry access is blocked.
+The browser UI is dependency-free. The local API uses **FastAPI** and SQLite.
 
 ## Run
 
-Option 1 (recommended): run the local catalog API
+Option 1 (recommended): run the FastAPI catalog service
 
 ```bash
-npm start
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app:app --reload --port 8080
 ```
 
 Then open http://localhost:8080. The app reads the SQLite-backed `/api/shoes`
@@ -22,7 +25,7 @@ If port 8080 is already in use, either open `http://localhost:8080` (an existing
 server may already be running) or start this copy on another port:
 
 ```bash
-PORT=8081 npm start
+uvicorn app:app --reload --port 8081
 ```
 
 Option 2: open the file directly
@@ -45,8 +48,9 @@ Then open:
 - `src/shoes.js` — sample catalog (edit here to add more shoes)
 - `src/recommender.js` — filter + scoring + explanations
 - `src/app.js` — wiring UI to recommender
-- `server.js` — zero-dependency static server + SQLite catalog API
-- `scripts/import-india-catalog.js` — imports `data/shoes.json` into SQLite
+- `app.py` — FastAPI server + SQLite catalog API
+- `backend/recommender.py` — backend recommendation scoring
+- `scripts/import_india_catalog.py` — imports `data/shoes.json` into SQLite
 
 ## How recommendations work (MVP)
 

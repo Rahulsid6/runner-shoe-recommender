@@ -16,7 +16,7 @@ cd runner-shoe-recommender
 
 rm -f db/sqlite/shoe_kb.sqlite
 sqlite3 db/sqlite/shoe_kb.sqlite < db/sqlite/schema.sql
-node scripts/import-india-catalog.js
+python3 scripts/import_india_catalog.py
 ```
 
 ## Sanity query
@@ -35,13 +35,13 @@ single KB shoe version, and stores INR prices in `shoe_version`.
 To refresh the database after updating the catalog:
 
 ```bash
-node scripts/import-india-catalog.js
+python3 scripts/import_india_catalog.py
 ```
 
 ## Run the catalog API locally
 
 ```bash
-npm start
+uvicorn app:app --reload --port 8080
 ```
 
 Open `http://localhost:8080`. The app will use `/api/shoes`, which reads the

@@ -76,3 +76,17 @@ Then open:
 - Add review ingestion + normalization pipeline (with ToS-safe sourcing)
 - Add “free-text” input interpreted into structured preferences (LLM)
 - Add RAG explanations with citations/links to original review pages
+# Catalog intake from Excel
+
+Use the prefilled workbook at `outputs/catalog-intake-template/runwise-india-shoe-catalog-intake.xlsx` to add or review shoe variants. Run a safe preview first:
+
+```bash
+python3 scripts/import_catalog_xlsx.py
+```
+
+After fixing validation errors, update the live JSON catalog deliberately:
+
+```bash
+python3 scripts/import_catalog_xlsx.py --write
+python3 scripts/import_india_catalog.py
+```

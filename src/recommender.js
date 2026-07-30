@@ -4,7 +4,7 @@
 // 1) Filter by hard constraints (surface/category, budget, width, stability).
 // 2) Score remaining shoes by how well they match preferences.
 
-(function () {
+(function (root) {
   function clamp01(x) {
     return Math.max(0, Math.min(1, x));
   }
@@ -113,6 +113,8 @@
   function hardFilter(shoe, prefs) {
     if (shoe.category !== prefs.surface) return false;
     if (shoe.msrp > prefs.budget * 1.35) return false; // hard cap: too far over budget
+    // Catalog entries without a fit label are treated as unisex / compatible.
+    if (prefs.gender && prefs.gender !== "all" && shoe.gender && shoe.gender !== prefs.gender) return false;
     if (!(shoe.widthOptions ?? []).includes(prefs.width)) {
       // Allow if user is "regular" and shoe is regular-only; otherwise filter.
       if (prefs.width !== "regular") return false;
@@ -160,15 +162,27 @@
     return clamp01(s);
   }
 
+  function formatBudgetAmount(amount, prefs) {
+    const value = Math.round(Number(amount) || 0).toLocaleString(undefined, {
+      maximumFractionDigits: 0,
+    });
+    const symbol = prefs.currencySymbol ?? "$";
+    return prefs.currencyPosition === "suffix" ? `${value} ${symbol}` : `${symbol}${value}`;
+  }
+
   function explain(shoe, prefs) {
     const reasons = [];
     const cautions = [];
 
-    if (shoe.msrp <= prefs.budget) reasons.push("Within budget");
-    else cautions.push(`Above budget (MSRP $${shoe.msrp})`);
+    if (shoe.msrp <= prefs.budget) reasons.push(`Within ${prefs.currencyCode ?? "local"} budget`);
+    else cautions.push(`Above budget (${formatBudgetAmount(shoe.msrp, prefs)})`);
 
     if ((shoe.widthOptions ?? []).includes(prefs.width)) reasons.push(`Comes in ${prefs.width} width`);
     else cautions.push(`May not fit: no ${prefs.width} option`);
+
+    if (prefs.gender && prefs.gender !== "all" && shoe.gender === prefs.gender) {
+      reasons.push(`${shoe.gender}'s fit selected`);
+    }
 
     if ((shoe.bestUse ?? []).includes(prefs.use)) reasons.push(`Good for ${prefs.use} running`);
     else if (prefs.use === "mixed") reasons.push("Versatile across multiple run types");
@@ -194,7 +208,7 @@
     return { reasons, cautions };
   }
 
-  window.Recommender = {
+  const Recommender = {
     recommend(prefs, catalog) {
       const candidates = (catalog ?? []).filter((s) => hardFilter(s, prefs));
 
@@ -209,4 +223,7 @@
       return ranked;
     },
   };
-})();
+
+  if (typeof module !== "undefined" && module.exports) module.exports = Recommender;
+  if (root) root.Recommender = Recommender;
+})(typeof window !== "undefined" ? window : globalThis);

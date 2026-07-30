@@ -22,6 +22,34 @@
           <div class="row">
             <label>
               <span class="labelLine">
+                <span>Country / market</span>
+                <span class="help" data-tip="Choose your country so prices, budget, and recommendation notes are shown in a familiar local currency. Exact availability still depends on local retailers.">i</span>
+              </span>
+              <select name="country" required>
+                <option value="IN" selected>India (₹ INR)</option>
+                <option value="US">United States ($ USD)</option>
+                <option value="GB">United Kingdom (£ GBP)</option>
+                <option value="EU">Europe (€ EUR)</option>
+                <option value="CA">Canada (C$ CAD)</option>
+                <option value="AU">Australia (A$ AUD)</option>
+                <option value="SG">Singapore (S$ SGD)</option>
+              </select>
+            </label>
+
+            <label>
+              <span class="labelLine">
+                <span id="budgetLabel">Budget (INR, max)</span>
+                <span class="help" data-tip="Maximum price you want to pay in your selected local currency. We try to keep picks under this; slightly over-budget shoes may still appear if they match strongly.">i</span>
+              </span>
+              <input name="budget" type="number" min="3000" step="500" value="18000" required />
+            </label>
+          </div>
+
+          <div id="countryNotice" class="hint compact"></div>
+
+          <div class="row">
+            <label>
+              <span class="labelLine">
                 <span>Surface</span>
                 <span class="help" data-tip="Where you run most. This drives grip, protection, cushioning, and shoe type. Road = pavement, Trail = off-road, Track = track workouts/racing.">i</span>
               </span>
@@ -32,16 +60,6 @@
               </select>
             </label>
 
-            <label>
-              <span class="labelLine">
-                <span>Budget (max)</span>
-                <span class="help" data-tip="Maximum price you want to pay. We try to keep picks under this; slightly over-budget shoes may still appear if they match strongly.">i</span>
-              </span>
-              <input name="budget" type="number" min="50" step="1" value="180" required />
-            </label>
-          </div>
-
-          <div class="row">
             <label>
               <span class="labelLine">
                 <span>Distance focus</span>
@@ -55,7 +73,9 @@
                 <option value="ultra">Ultra</option>
               </select>
             </label>
+          </div>
 
+          <div class="row">
             <label>
               <span class="labelLine">
                 <span>Primary use</span>
@@ -67,6 +87,18 @@
                 <option value="tempo">Tempo / Speed</option>
                 <option value="race">Race</option>
                 <option value="mixed">Mixed</option>
+              </select>
+            </label>
+
+            <label>
+              <span class="labelLine">
+                <span>Shoe fit</span>
+                <span class="help" data-tip="Use the product fit that you normally buy. This removes duplicate men’s/women’s variants from the results. Choose All fits if you want to compare every available version.">i</span>
+              </span>
+              <select name="gender" required>
+                <option value="women">Women’s</option>
+                <option value="men" selected>Men’s</option>
+                <option value="all">All fits</option>
               </select>
             </label>
           </div>
@@ -156,7 +188,7 @@
         </form>
 
         <div class="hint">
-          <strong>Tip:</strong> This MVP uses a transparent scoring model. It’s easy to tune weights and add shoes.
+          <strong>Tip:</strong> Select your country first so budgets and shoe prices are easier to understand.
         </div>
       </section>
 
@@ -174,7 +206,7 @@
       <section class="card full">
         <h2>Catalog (sample data)</h2>
         <p class="muted">
-          A small built-in dataset across road/trail/track. Add more shoes in <code>src/shoes.js</code>.
+          A small built-in dataset across road/trail/track. Prices update based on selected country where available.
         </p>
         <div id="catalog" class="catalog"></div>
       </section>

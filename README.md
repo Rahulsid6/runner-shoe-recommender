@@ -9,10 +9,26 @@ This project was intentionally built with **zero external dependencies** so it w
 
 ## Run
 
-Option 1 (easiest): open the file directly
-- Open `index.html` in your browser.
+Option 1 (recommended): run the local catalog API
 
-Option 2: serve locally (recommended)
+```bash
+npm start
+```
+
+Then open http://localhost:8080. The app reads the SQLite-backed `/api/shoes`
+endpoint, so catalog updates are available without rebuilding frontend code.
+
+If port 8080 is already in use, either open `http://localhost:8080` (an existing
+server may already be running) or start this copy on another port:
+
+```bash
+PORT=8081 npm start
+```
+
+Option 2: open the file directly
+- Open `index.html` in your browser. It falls back to the bundled JSON catalog.
+
+Option 3: serve static files
 From the project folder:
 
 ```bash
@@ -29,6 +45,8 @@ Then open:
 - `src/shoes.js` — sample catalog (edit here to add more shoes)
 - `src/recommender.js` — filter + scoring + explanations
 - `src/app.js` — wiring UI to recommender
+- `server.js` — zero-dependency static server + SQLite catalog API
+- `scripts/import-india-catalog.js` — imports `data/shoes.json` into SQLite
 
 ## How recommendations work (MVP)
 

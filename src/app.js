@@ -126,6 +126,10 @@
     return formatMoneyForCountry(n, country);
   }
 
+  function formatMeasurement(value, unit) {
+    return value === null || value === undefined ? "—" : `${value}${unit}`;
+  }
+
   function badge(text, kind) {
     const cls = kind ? `badge ${kind}` : "badge";
     return `<span class="${cls}">${text}</span>`;
@@ -190,8 +194,8 @@
       shoe.gender ? badge(`${shoe.gender} fit`) : "",
       badge(priceLabel),
       badge(priceSourceLabel),
-      badge(`${shoe.dropMm ?? "-"}mm drop`),
-      badge(`${shoe.weightG ?? "-"}g`),
+      badge(`${formatMeasurement(shoe.dropMm, "mm")} drop`),
+      badge(formatMeasurement(shoe.weightG, "g")),
     ].join("");
 
     const reasonBadges = reasons.slice(0, 4).map((r) => badge(r, "good")).join("");
@@ -250,8 +254,8 @@
           <td><strong style="color: var(--text)">${escapeHtml(s.brand)} ${escapeHtml(s.model)}</strong></td>
           <td>${s.category}</td>
           <td>${fmtMoney(s.msrp, prefs.country)} ${s.priceSource === "estimated" ? "<span class=\"muted\">est.</span>" : ""}</td>
-          <td>${s.weightG ?? "-"}g</td>
-          <td>${s.dropMm ?? "-"}mm</td>
+          <td>${formatMeasurement(s.weightG, "g")}</td>
+          <td>${formatMeasurement(s.dropMm, "mm")}</td>
           <td>${s.stability}</td>
           <td>${s.cushionFeel}</td>
           <td>${extras}</td>

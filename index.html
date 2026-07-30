@@ -3,20 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Runner Shoe Recommender (MVP)</title>
+    <title>Runwise — Find your next running shoe</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <header class="container">
-      <h1>Runner Shoe Recommender (MVP)</h1>
-      <p class="muted">
-        Offline MVP (no external DB). Filters + scoring-based recommendations for road / trail / track.
-      </p>
+    <header class="container hero">
+      <div class="brand"><span class="brandMark" aria-hidden="true">↗</span>RUNWISE</div>
+      <div class="heroLayout">
+        <div>
+          <p class="eyebrow">India running shoe finder</p>
+          <h1>Your next best run starts here.</h1>
+          <p class="heroCopy">Tell us how you run. We’ll turn your training, fit, and budget into a shortlist that makes sense.</p>
+        </div>
+        <div class="heroStats" aria-label="Catalog highlights">
+          <div><strong>16</strong><span>India variants</span></div>
+          <div><strong>7</strong><span>running brands</span></div>
+          <div><strong>3</strong><span>run surfaces</span></div>
+        </div>
+      </div>
     </header>
 
     <main class="container grid">
       <section class="card">
+        <p class="sectionKicker">YOUR PROFILE</p>
         <h2>Your running profile</h2>
+        <p class="cardIntro">Choose what matters on your run. You can revise any detail later.</p>
 
         <form id="prefsForm" class="form">
           <div class="row">
@@ -194,7 +205,7 @@
 
       <section class="card">
         <div class="resultsHeader">
-          <h2>Recommendations</h2>
+          <div><p class="sectionKicker">YOUR SHORTLIST</p><h2>Recommendations</h2></div>
           <div id="meta" class="muted"></div>
         </div>
 
@@ -204,6 +215,7 @@
       </section>
 
       <section class="card full">
+        <p class="sectionKicker">THE CATALOG</p>
         <h2>Catalog (sample data)</h2>
         <p class="muted">
           A small built-in dataset across road/trail/track. Prices update based on selected country where available.
@@ -213,7 +225,7 @@
     </main>
 
     <footer class="container footer muted">
-      Built as an offline MVP. Next step: replace in-memory catalog with Postgres + ingestion pipeline + RAG explanations.
+      Runwise uses a transparent matching model. Always check fit and local availability before you buy.
     </footer>
 
     <script src="./src/shoes.js"></script>

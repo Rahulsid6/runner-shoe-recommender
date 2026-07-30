@@ -13,10 +13,12 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
+from backend.catalog_quality import quality_report
 from backend.recommender import recommend
 
 ROOT = Path(__file__).parent
 DATABASE_PATH = Path(os.environ.get("SHOE_DB_PATH", ROOT / "db/sqlite/shoe_kb.sqlite"))
+CATALOG_PATH = ROOT / "data/shoes.json"
 app = FastAPI(title="Runner Shoe Recommender API", version="1.0.0")
 logger = logging.getLogger(__name__)
 
@@ -87,6 +89,16 @@ def shoes(market: str = "IN") -> dict[str, Any]:
     if market.upper() != "IN":
         raise HTTPException(400, "Only the IN market is currently available.")
     return {"schema_version": "1.0", "market": "IN", "currency": "INR", "shoes": fetch_catalog()}
+
+
+@app.get("/api/catalog/quality")
+def catalog_quality() -> dict[str, Any]:
+    """Expose the raw-catalog review queue for the admin/data workflow."""
+    try:
+        return quality_report(json.loads(CATALOG_PATH.read_text()))
+    except (OSError, json.JSONDecodeError):
+        logger.exception("Catalog quality check failed")
+        raise HTTPException(500, "Catalog quality service unavailable.")
 
 
 @app.post("/api/recommend")

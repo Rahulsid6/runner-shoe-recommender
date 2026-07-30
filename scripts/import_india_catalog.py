@@ -10,6 +10,11 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from backend.catalog_quality import quality_report
+
 CATALOG_PATH = ROOT / "data" / "shoes.json"
 DATABASE_PATH = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "db" / "sqlite" / "shoe_kb.sqlite"
 
@@ -50,6 +55,9 @@ def main() -> None:
     shoes = catalog.get("shoes")
     if not isinstance(shoes, list):
         raise SystemExit("data/shoes.json must contain a shoes array.")
+    report = quality_report(catalog)
+    if report["summary"]["errors"]:
+        raise SystemExit(f"Catalog quality check failed with {report['summary']['errors']} error(s). Run python3 scripts/catalog_quality.py for details.")
 
     connection = sqlite3.connect(DATABASE_PATH)
     connection.execute("PRAGMA foreign_keys = ON")

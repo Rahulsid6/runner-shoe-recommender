@@ -75,6 +75,26 @@ def hard_filter(shoe: dict, prefs: dict) -> bool:
     return prefs.get("width") == "regular" or prefs.get("width") in (shoe.get("widthOptions") or [])
 
 
+def role_sanity(shoe: dict, prefs: dict) -> float:
+    """Apply a light penalty for purpose-built track spikes used outside racing."""
+    if prefs.get("surface") == "track" and shoe.get("track", {}).get("type") == "spike" and prefs.get("use") != "race":
+        return 0.35
+    return 1.0
+
+
+def weight_preference_score(shoe: dict, prefs: dict) -> float:
+    """A bounded preference adjustment, not a health or injury recommendation."""
+    weight = prefs.get("weightKg")
+    ride = shoe.get("ride", {})
+    if not isinstance(weight, (int, float)):
+        return 0.5
+    if weight >= 85:
+        return 1.0 if ride.get("cushioning", 0) >= 8 and ride.get("stability", 0) >= 7 else 0.55
+    if weight <= 60:
+        return 1.0 if (shoe.get("weightG") or 999) <= 250 and ride.get("responsiveness", 0) >= 8 else 0.55
+    return 0.75
+
+
 def explain(shoe: dict, prefs: dict) -> tuple[list[str], list[str]]:
     reasons, cautions = [], []
     (reasons if shoe["msrp"] <= prefs["budget"] else cautions).append(
@@ -90,13 +110,35 @@ def explain(shoe: dict, prefs: dict) -> tuple[list[str], list[str]]:
     return reasons, cautions
 
 
+def score_weights(surface: str) -> dict[str, float]:
+    """Weights always sum to 1 for an interpretable 0–100 match score."""
+    if surface == "trail":
+        return {"distance": .16, "use": .17, "stability": .15, "cushion": .10, "width": .08, "budget": .07, "ride": .10, "trail": .17}
+    return {"distance": .19, "use": .21, "stability": .18, "cushion": .12, "width": .10, "budget": .08, "ride": .12}
+
+
+def score_components(shoe: dict, prefs: dict) -> dict[str, float]:
+    ride = shoe["ride"]
+    ride_score = clamp(ride["cushioning"] / 10) * .35 + clamp(ride["responsiveness"] / 10) * .35 + clamp(ride["durability"] / 10) * .2 + clamp(ride["value"] / 10) * .1
+    return {
+        "distance": distance_score(shoe, prefs),
+        "use": use_match(shoe, prefs),
+        "stability": stability_match(shoe, prefs),
+        "cushion": cushion_match(shoe, prefs),
+        "width": 1.0 if prefs.get("width") in (shoe.get("widthOptions") or []) else .2,
+        "budget": budget_match(shoe, prefs),
+        "ride": ride_score,
+        "trail": trail_score(shoe, prefs),
+    }
+
+
 def recommend(prefs: dict, catalog: list[dict]) -> list[dict]:
-    weights = {"distance": .18, "use": .22, "stability": .18, "cushion": .12, "width": .08, "budget": .07, "ride": .1, "trail": .12}
+    weights = score_weights(prefs.get("surface", "road"))
     rankings = []
     for shoe in filter(lambda item: hard_filter(item, prefs), catalog):
-        ride = shoe["ride"]
-        ride_score = clamp(ride["cushioning"] / 10) * .35 + clamp(ride["responsiveness"] / 10) * .35 + clamp(ride["durability"] / 10) * .2 + clamp(ride["value"] / 10) * .1
-        score = distance_score(shoe, prefs) * weights["distance"] + use_match(shoe, prefs) * weights["use"] + stability_match(shoe, prefs) * weights["stability"] + cushion_match(shoe, prefs) * weights["cushion"] + (1 if prefs.get("width") in (shoe.get("widthOptions") or []) else .2) * weights["width"] + budget_match(shoe, prefs) * weights["budget"] + ride_score * weights["ride"] + (trail_score(shoe, prefs) * weights["trail"] if prefs.get("surface") == "trail" else 0)
+        components = score_components(shoe, prefs)
+        breakdown = {name: round(components[name] * weight, 4) for name, weight in weights.items()}
+        score = sum(breakdown.values()) * role_sanity(shoe, prefs)
         reasons, cautions = explain(shoe, prefs)
-        rankings.append({"shoe": shoe, "score": clamp(score), "reasons": reasons, "cautions": cautions})
+        rankings.append({"shoe": shoe, "score": clamp(score), "score_breakdown": breakdown, "reasons": reasons, "cautions": cautions})
     return sorted(rankings, key=lambda item: item["score"], reverse=True)

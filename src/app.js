@@ -183,7 +183,7 @@
   }
 
   function renderRec(item, idx, prefs) {
-    const { shoe, score, reasons, cautions } = item;
+    const { shoe, score, reasons, cautions, score_breakdown: scoreBreakdown } = item;
     const country = prefs?.country ?? "IN";
     const priceLabel = fmtMoney(shoe.msrp, country);
     const priceSourceLabel = shoe.priceSource === "estimated" ? "est. price" : "local price";
@@ -211,6 +211,11 @@
         ? `Estimated ${prefs.currencyCode} price for ${prefs.countryName}; check local retailers for exact availability.`
         : `Shown with ${prefs.countryName} pricing.`;
 
+    const strongestFactor = scoreBreakdown
+      ? Object.entries(scoreBreakdown).sort(([, a], [, b]) => b - a)[0]?.[0]
+      : null;
+    const factorLabel = strongestFactor ? `Strongest match: ${strongestFactor}` : "";
+
     return `
       <article class="rec">
         <div class="recTop">
@@ -222,6 +227,7 @@
         </div>
 
         <p class="countryNote">${escapeHtml(countryNote)}</p>
+        ${factorLabel ? `<p class="matchDetail">${escapeHtml(factorLabel)}</p>` : ""}
 
         <div class="badges" style="margin-top:10px">${reasonBadges}${cautionBadges}</div>
 

@@ -7,11 +7,11 @@ import logging
 import os
 import sqlite3
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from backend.recommender import recommend
 
@@ -23,8 +23,24 @@ logger = logging.getLogger(__name__)
 COUNTRIES = {"IN": ("INR", "₹", 83), "US": ("USD", "$", 1), "GB": ("GBP", "£", .78), "EU": ("EUR", "€", .92), "CA": ("CAD", "C$", 1.35), "AU": ("AUD", "A$", 1.5), "SG": ("SGD", "S$", 1.35)}
 
 
+class RunnerPreferences(BaseModel):
+    country: Literal["IN", "US", "GB", "EU", "CA", "AU", "SG"] = "IN"
+    currencyCode: str = "INR"
+    surface: Literal["road", "trail", "track"]
+    budget: float = Field(gt=0)
+    distance: Literal["5k", "10k", "hm", "fm", "ultra"]
+    use: Literal["easy", "daily", "tempo", "race", "mixed"]
+    gender: Literal["men", "women", "all"] = "all"
+    stability: Literal["neutral", "mild", "stability"] = "neutral"
+    width: Literal["regular", "wide", "narrow"] = "regular"
+    cushion: Literal["firm", "balanced", "soft"] = "balanced"
+    weightKg: float = Field(ge=35, le=130)
+    terrain: Literal["mixed", "rocky", "muddy", "buffed"] = "mixed"
+    trailPriority: Literal["grip", "protection", "weight"] = "grip"
+
+
 class RecommendationRequest(BaseModel):
-    prefs: dict[str, Any]
+    prefs: RunnerPreferences
 
 
 def read_json(value: str | None, fallback: Any) -> Any:
@@ -76,7 +92,8 @@ def shoes(market: str = "IN") -> dict[str, Any]:
 @app.post("/api/recommend")
 def recommendations(request: RecommendationRequest) -> dict[str, Any]:
     try:
-        return {"recommendations": recommend(request.prefs, ranking_catalog(request.prefs))}
+        prefs = request.prefs.model_dump()
+        return {"ranking_version": "2026.1", "recommendations": recommend(prefs, ranking_catalog(prefs))}
     except Exception:
         logger.exception("Recommendation failed")
         raise HTTPException(500, "Catalog service unavailable.")

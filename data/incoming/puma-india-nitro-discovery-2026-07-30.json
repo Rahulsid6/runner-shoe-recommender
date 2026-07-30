@@ -1,0 +1,30 @@
+{
+  "source": {
+    "brand": "PUMA",
+    "market": "IN",
+    "url": "https://in.puma.com/in/en/sports/sports-running/nitro-collection",
+    "retrieved_on": "2026-07-30",
+    "source_type": "official collection listing",
+    "scope": "Initial distinct-model discovery batch. Prices are listing observations, not final MSRP verification."
+  },
+  "candidates": [
+    {"model":"MagMax NITRO 2","gender":"men","category":"road","listed_price_inr":16999,"listed_mrp_inr":16999,"collection_status":"candidate"},
+    {"model":"MagMax NITRO 2","gender":"women","category":"road","listed_price_inr":16999,"listed_mrp_inr":16999,"collection_status":"candidate"},
+    {"model":"PUMA x HYROX Velocity NITRO 5","gender":"men","category":"road","listed_price_inr":12999,"listed_mrp_inr":12999,"collection_status":"candidate"},
+    {"model":"PUMA x HYROX Velocity NITRO 5","gender":"women","category":"road","listed_price_inr":12999,"listed_mrp_inr":12999,"collection_status":"candidate"},
+    {"model":"PUMA x HYROX Deviate NITRO Elite 4","gender":"men","category":"road","listed_price_inr":21999,"listed_mrp_inr":21999,"collection_status":"candidate"},
+    {"model":"PUMA x HYROX Deviate NITRO Elite 4","gender":"women","category":"road","listed_price_inr":21999,"listed_mrp_inr":21999,"collection_status":"candidate"},
+    {"model":"Electrify NITRO 4","gender":"men","category":"road","listed_price_inr":6299,"listed_mrp_inr":8999,"collection_status":"candidate"},
+    {"model":"Liberate NITRO 2","gender":"women","category":"road","listed_price_inr":7199,"listed_mrp_inr":11999,"collection_status":"candidate"},
+    {"model":"PUMA x HYROX Deviate NITRO 4","gender":"men","category":"road","listed_price_inr":16999,"listed_mrp_inr":16999,"collection_status":"candidate"},
+    {"model":"PUMA x HYROX Deviate NITRO 4","gender":"women","category":"road","listed_price_inr":16999,"listed_mrp_inr":16999,"collection_status":"candidate"},
+    {"model":"FAST-R NITRO Elite 3","gender":"women","category":"road","listed_price_inr":23999,"listed_mrp_inr":23999,"collection_status":"candidate"},
+    {"model":"Deviate NITRO Elite 3","gender":"men","category":"road","listed_price_inr":14999,"listed_mrp_inr":19999,"collection_status":"candidate"},
+    {"model":"Deviate Pure NITRO","gender":"men","category":"road","listed_price_inr":14999,"listed_mrp_inr":14999,"collection_status":"candidate"},
+    {"model":"ForeverRun NITRO 2","gender":"men","category":"road","listed_price_inr":10499,"listed_mrp_inr":14999,"collection_status":"candidate"},
+    {"model":"Propio NITRO","gender":"men","category":"road","listed_price_inr":6599,"listed_mrp_inr":10999,"collection_status":"candidate"},
+    {"model":"Magnify NITRO 3","gender":"men","category":"road","listed_price_inr":9749,"listed_mrp_inr":14999,"collection_status":"already_in_catalog"},
+    {"model":"Deviate NITRO 4","gender":"men","category":"road","listed_price_inr":16999,"listed_mrp_inr":16999,"collection_status":"already_in_catalog"},
+    {"model":"Deviate NITRO Elite 4","gender":"men","category":"road","listed_price_inr":21999,"listed_mrp_inr":21999,"collection_status":"already_in_catalog"}
+  ]
+}

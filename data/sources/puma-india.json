@@ -1,0 +1,9 @@
+{
+  "brand": "PUMA",
+  "market": "IN",
+  "collection_url": "https://in.puma.com/in/en/sports/sports-running/nitro-collection",
+  "source_type": "manufacturer",
+  "refresh_policy": "Review product pages monthly; capture MRP separately from sale prices and retain the product URL for every imported variant.",
+  "fields_to_capture": ["model", "gender", "category", "mrp_inr", "sale_price_inr", "weight_g", "drop_mm", "stack_mm_heel", "stack_mm_forefoot", "width_options", "stability", "source_url", "last_verified_at"],
+  "last_seeded": "2026-07-30"
+}
